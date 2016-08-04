@@ -3,6 +3,11 @@ import requests
 import bmauth
 
 
+__author__ = 'Mathew Odden'
+__license__ = 'Apache 2.0'
+__copyright__ = 'Copyright 2016 Mathew Odden'
+
+
 class Client(requests.Session):
 
     def __init__(self, username, passwd, space_id):
@@ -51,7 +56,8 @@ class Collection(object):
         return resp.json()
 
     def show(self, obj_id):
-        resp = self.client.get('{0}{1}/{2}'.format(self.base_url, self.path, obj_id))
+        path = '{0}{1}/{2}'.format(self.base_url, self.path, obj_id)
+        resp = self.client.get(path)
         resp.raise_for_status()
         return resp.json()
 
@@ -69,6 +75,7 @@ class Groups(Collection):
         # NOTE(mrodden): apparently, the API server can't handle
         # boolean type for autorecovery, has to be a string of True/False
         if 'autorecovery' in kwargs:
-            ar_bool = str(kwargs['autorecovery']).lower() in ('yes', 'true', 't', 1)
+            normed = str(kwargs['autorecovery']).lower()
+            ar_bool = normed in ('yes', 'true', 't', 1)
             kwargs['autorecovery'] = str(ar_bool)
         super(Groups, self).create(*args, **kwargs)
