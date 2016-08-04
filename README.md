@@ -1,7 +1,11 @@
 # pyics
-A pythonic API for interacting with the IBM Containers Service
 
 [![Build Status](https://travis-ci.org/locke105/pyics.svg?branch=master)](https://travis-ci.org/locke105/pyics)
+[![Apache License](http://img.shields.io/badge/license-APACHE2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
+A Python-ic API for interacting with the IBM Containers Service
+
+Design goals are ease-of-use and readability.
 
 # Using
 
@@ -12,9 +16,9 @@ The following example shows how to get a `Client` and do some group manipulation
 ```python
 >>> import pyics
 >>> client = pyics.Client(
-...    username='some.bluemix.user@example.org',
-...    passwd='supersecretpassword',
-...    space_id='deadbeefabc123415123')
+...     username='some.bluemix.user@example.org',
+...     passwd='supersecretpassword',
+...     space_id='deadbeefabc123415123')
 >>> client.groups.list()
 []
 >>> client.groups.create(
