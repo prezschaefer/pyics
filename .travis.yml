@@ -5,6 +5,7 @@ python:
 
 install:
   - pip install .
+  - pip install flake8
 
 script:
   - tools/run_tests.sh
