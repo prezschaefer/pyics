@@ -32,11 +32,13 @@ class Collection(object):
     def __init__(self, client):
         self.client = client
         # lookup class object from global scope, or just build one on the fly
+
         def find_wrapper_cls():
             try:
                 return globals()[self.wrapper_class_name]
             except (AttributeError, KeyError):
                 return type(self.__class__.__name__[:-1], (Wrapper,), {})
+
         self.wrapper_class = find_wrapper_cls()
 
     def list(self):
@@ -100,7 +102,7 @@ class Wrapper(object):
     def __str__(self):
         attrbs = []
         for k, v in self._body.iteritems():
-            attrbs.append('{0}={1}'.format(k,v))
+            attrbs.append('{0}={1}'.format(k, v))
         stringified = '<{0} {1}>'.format(
             self.__class__.__name__, ', '.join(attrbs))
         return stringified
@@ -121,4 +123,4 @@ def pythonize(string):
 
 def unpythonize(string):
     """Transforms 'some_variable_name' to 'SomeVariableName'"""
-    return string.title().replace('_','')
+    return string.title().replace('_', '')
