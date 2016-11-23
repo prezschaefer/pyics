@@ -100,6 +100,36 @@ class Groups(Collection):
             kwargs['autorecovery'] = str(ar_bool)
         return super(Groups, self).create(*args, **kwargs)
 
+    def maproute(self, *args, **kwargs):
+        path = '{0}{1}{2}{3}'.format(
+            self.base_url, self.path, obj_id, '/maproute')
+
+        data_map = {}
+        if k, v in kwargs.iteritems():
+            data_map[unpythonize(k)] = v
+
+        headers = {'Content-Type': 'application/json'}
+        resp = self.client.post(
+            url=path, json=data_map, headers=headers)
+
+        resp.raise_for_status()
+        return self.wrapper_class(resp.json())
+
+    def unmaproute(self, *args, **kwargs):
+        path = '{0}{1}{2}{3}'.format(
+            self.base_url, self.path, obj_id, '/unmaproute')
+
+        data_map = {}
+        if k, v in kwargs.iteritems():
+            data_map[unpythonize(k)] = v
+
+        headers = {'Content-Type': 'application/json'}
+        resp = self.client.post(
+            url=path, json=data_map, headers=headers)
+
+        resp.raise_for_status()
+        return self.wrapper_class(resp.json())
+
 
 class Containers(Collection):
 
