@@ -130,31 +130,31 @@ class Containers(Collection):
         return resp.json()
 
     def stop(self, obj_id):
-        path = '{0}/{1}/2}'.format(self.base_url, obj_id, 'stop')
+        path = '{0}/{1}/{2}'.format(self.base_url, obj_id, 'stop')
         resp = self.client.post(path)
         resp.raise_for_status()
         return resp.json()
 
     def restart(self, obj_id):
-        path = '{0}/{1}/2}'.format(self.base_url, obj_id, 'stop')
+        path = '{0}/{1}/{2}'.format(self.base_url, obj_id, 'stop')
         resp = self.client.post(path)
         resp.raise_for_status()
         return resp.json()
 
     def pause(self, obj_id):
-        path = '{0}/{1}/2}'.format(self.base_url, obj_id, 'pause')
+        path = '{0}/{1}/{2}'.format(self.base_url, obj_id, 'pause')
         resp = self.client.post(path)
         resp.raise_for_status()
         return resp.json()
 
     def unpause(self, obj_id):
-        path = '{0}/{1}/2}'.format(self.base_url, obj_id, 'unpause')
+        path = '{0}/{1}/{2}'.format(self.base_url, obj_id, 'unpause')
         resp = self.client.post(path)
         resp.raise_for_status()
         return resp.json()
 
     def rename(self, obj_id, new_name):
-        path = '{0}/{1}/2}'.format(self.base_url, obj_id, 'rename')
+        path = '{0}/{1}/{2}'.format(self.base_url, obj_id, 'rename')
         params_map = {"name": new_name}
 
         resp = self.client.post(url=path, params=params_map)
