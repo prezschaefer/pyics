@@ -41,8 +41,10 @@ class Client(requests.Session):
         self.groups = Groups(self)
 
 
-class Collection(object):
-    base_url = 'https://containers-api.ng.bluemix.net/v3/containers'
+class BaseApi(object):
+    base_url = 'https://containers-api.ng.bluemix.net/v3'
+    json_header = {'Content-Type': 'application/json'}
+    suffix_count = 0
 
     def __init__(self, client):
         self.client = client
@@ -52,12 +54,18 @@ class Collection(object):
             try:
                 return globals()[self.wrapper_class_name]
             except (AttributeError, KeyError):
-                return type(self.__class__.__name__[:-1], (Wrapper,), {})
+                return type(self.__class__.__name__[:self.suffix_count],
+                            (Wrapper,), {})
 
         self.wrapper_class = find_wrapper_cls()
 
+
+class Collection(BaseApi):
+    suffix_count = 1
+
     def list(self):
-        resp = self.client.get(self.base_url + self.path)
+        path = '{0}/{1}/{2}'.format(self.base_url, self.path, 'json')
+        resp = self.client.get(path)
         resp.raise_for_status()
         return [self.wrapper_class(item) for item in resp.json()]
 
@@ -66,38 +74,24 @@ class Collection(object):
         for k, v in kwargs.iteritems():
             data_map[unpythonize(k)] = v
 
-        headers = {'Content-Type': 'application/json'}
         resp = self.client.post(
-            url='{0}{1}'.format(self.base_url, self.path),
+            url='{0}/{1}'.format(self.base_url, self.path),
             json=data_map,
-            headers=headers)
+            headers=self.json_header)
         resp.raise_for_status()
         return self.wrapper_class(resp.json())
 
     def show(self, obj_id):
-        path = '{0}{1}/{2}'.format(self.base_url, self.path, obj_id)
+        path = '{0}/{1}/{2}'.format(self.base_url, self.path, obj_id)
         resp = self.client.get(path)
         resp.raise_for_status()
         return self.wrapper_class(resp.json())
 
     def delete(self, obj_id):
-        path = '{0}{1}/{2}'.format(self.base_url, self.path, obj_id)
+        path = '{0}/{1}/{2}'.format(self.base_url, self.path, obj_id)
         resp = self.client.delete(path)
         resp.raise_for_status()
         return resp.json()
-
-
-class Groups(Collection):
-    path = '/groups'
-
-    def create(self, *args, **kwargs):
-        # NOTE(mrodden): apparently, the API server can't handle
-        # boolean type for autorecovery, has to be a string of True/False
-        if 'autorecovery' in kwargs:
-            normed = str(kwargs['autorecovery']).lower()
-            ar_bool = normed in ('yes', 'true', 't', 1)
-            kwargs['autorecovery'] = str(ar_bool)
-        return super(Groups, self).create(*args, **kwargs)
 
 
 class Wrapper(object):
