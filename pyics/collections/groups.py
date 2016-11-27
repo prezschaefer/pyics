@@ -23,3 +23,38 @@ class Groups(pyics.Collection):
         resp = self.client.delete(url=path, params=kwargs)
         resp.raise_for_status()
         return resp.json()
+
+    def update(self, obj_id, *args, **kwargs):
+        path = '{0}/{1}/{2}'.format(self.base_url, self.path, obj_id)
+        data_map = {}
+        for k, v in kwargs:
+            data_map[pyics.unpythonize(k)] = v
+
+        resp = self.client.patch(
+            url=path, headers=self.json_header, json=data_map)
+        resp.raise_for_status()
+        return resp.json()
+
+    def map_route(self, obj_id, *args, **kwargs):
+        path = '{0}/{1}/{2}/{3}'.format(
+            self.base_url, self.path, obj_id, 'maproute')
+        data_map = {}
+        for k, v in kwargs:
+            data_map[pyics.unpythonize(k)] = v
+
+        resp = self.client.post(
+            url=path, headers=self.json_header, json=data_map)
+        resp.raise_for_status()
+        return type('MapStatus', (pyics.Wrapper,), {})(resp.json())
+
+    def unmap_route(self, obj_id, *args, **kwargs):
+        path = '{0}/{1}/{2}/{3}'.format(
+            self.base_url, self.path, obj_id, 'unmaproute')
+        data_map = {}
+        for k,v in kwargs:
+            data_map[pyics.unpythonize(k)] = v
+
+        resp = self.client.post(
+            url=path, headers=self.json_header, json=data_map)
+        resp.raise_for_status()
+        return type('MapStatus', (pyics.Wrapper,), {})(resp.json())
