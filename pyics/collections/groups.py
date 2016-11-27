@@ -18,6 +18,14 @@ class Groups(pyics.Collection):
             kwargs['autorecovery'] = str(ar_bool)
         return super(Groups, self).create(*args, **kwargs)
 
+    def show(self, obj_id):
+        # NOTE(cjschaef): the show for groups does not append 'json' at the
+        # end of the path like the other collections do
+        resp = self.client.get(
+            '{0}/{1}/{2}'.format(self.base_url, self.path, obj_id)
+        resp.raise_for_status()
+        return self.wrapper_class(resp.json())        
+
     def delete(self, obj_id, *args, **kwargs):
         path = '{0}/{1}/{2}'.format(self.base_url, self.path, obj_id)
         resp = self.client.delete(url=path, params=kwargs)

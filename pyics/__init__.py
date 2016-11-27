@@ -82,7 +82,8 @@ class Collection(BaseApi):
         return self.wrapper_class(resp.json())
 
     def show(self, obj_id):
-        path = '{0}/{1}/{2}'.format(self.base_url, self.path, obj_id)
+        path = '{0}/{1}/{2}/{3}'.format(
+            self.base_url, self.path, obj_id, 'json')
         resp = self.client.get(path)
         resp.raise_for_status()
         return self.wrapper_class(resp.json())
